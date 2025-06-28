@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="es">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+  <title>Bosque del Ahorro con Totoro</title>
+  <link href="https://fonts.googleapis.com/css2?family=Fredoka:wght@400;700&display=swap" rel="stylesheet">
+  <style>
+    body {
+      margin: 0;
+      font-family: 'Fredoka', sans-serif;
+      background: linear-gradient(#e0f7fa, #c8e6c9);
+      text-align: center;
+      color: #2e7d32;
+    }
+    header {
+      background-color: #a5d6a7;
+      padding: 30px 20px;
+      position: relative;
+    }
+    header h1 {
+      font-size: 2.5em;
+      margin: 0;
+    }
+    #totoro-img {
+      width: 180px;
+      margin: 20px 0;
+    }
+    .menu {
+      display: flex;
+      flex-direction: column;
+      align-items: center;
+      gap: 20px;
+      margin: 30px 0;
+    }
+    .menu button {
+      background: #fff;
+      border: 2px solid #81c784;
+      border-radius: 20px;
+      padding: 15px 25px;
+      font-size: 1.2em;
+      cursor: pointer;
+      transition: 0.3s;
+      box-shadow: 0 4px 10px rgba(0,0,0,0.1);
+    }
+    .menu button:hover {
+      background: #dcedc8;
+    }
+    .content {
+      padding: 20px;
+      max-width: 600px;
+      margin: auto;
+      background: #ffffffdd;
+      border-radius: 20px;
+      box-shadow: 0 5px 15px rgba(0,0,0,0.2);
+    }
+    .hidden {
+      display: none;
+    }
+    ul {
+      text-align: left;
+    }
+    #score {
+      position: fixed;
+      top: 10px;
+      right: 20px;
+      background: #fff8e1;
+      color: #4caf50;
+      padding: 10px 15px;
+      border-radius: 15px;
+      box-shadow: 0 2px 6px rgba(0,0,0,0.1);
+      font-weight: bold;
+    }
+  </style>
+</head>
+<body>
+  <header>
+    <h1>🌳 Bosque del Ahorro 🌳</h1>
+    <img src="toto.png" id="totoro-img" alt="Totoro" height="150px" width="-8px" />
+    <p>Aprende a ahorrar con Totoro y sus amigos</p>
+  </header>
+
+  <div class="menu">
+    <button onclick="showSection('story')">📖 Bosque del Ahorro</button>
+    <button onclick="showSection('game')">🎮 Juega y Aprende</button>
+    <button onclick="showSection('tips')">🌟 Tips de Totoro</button>
+  </div>
+
+  <div id="score" class="hidden">Puntaje: 0</div>
+  <div id="content-area" class="content"></div>
+
+  <script>
+    const contentArea = document.getElementById('content-area');
+    const scoreBox = document.getElementById('score');
+    let score = 0;
+    let currentQuestion = 0;
+
+    const questions = [
+      {
+        question: "¿Qué es mejor hacer con el dinero que recibes semanalmente?",
+        options: [
+          { text: "Gastar todo en dulces", correct: false },
+          { text: "Ahorrar una parte y gastar otra", correct: true }
+        ]
+      },
+      {
+        question: "¿Qué es una buena razón para ahorrar?",
+        options: [
+          { text: "Comprar algo que realmente deseas más adelante", correct: true },
+          { text: "Comprar lo primero que veas en la tienda", correct: false }
+        ]
+      },
+      {
+        question: "¿Cuál de estos objetos es más útil para ahorrar?",
+        options: [
+          { text: "Una alcancía", correct: true },
+          { text: "Un juguete", correct: false }
+        ]
+      },
+      {
+        question: "¿Qué significa gastar con conciencia?",
+        options: [
+          { text: "Pensar antes de comprar y elegir bien", correct: true },
+          { text: "Comprar todo lo que puedas sin pensar", correct: false }
+        ]
+      }
+    ];
+
+    function showSection(section) {
+      if (section === 'story') {
+        contentArea.innerHTML = `
+          <h2>📖 Bienvenido al Bosque del Ahorro</h2>
+          <p>Totoro necesita tu ayuda para completar 3 misiones:</p>
+          <ul>
+            <li>🌱 Guardar bellotas para el invierno</li>
+            <li>🍃 No gastar todo en dulces mágicos</li>
+            <li>🏡 Construir tu casa del ahorro</li>
+          </ul>
+          <p>¡Cada misión te enseña algo nuevo sobre el valor del dinero!</p>
+        `;
+        scoreBox.classList.add('hidden');
+      } else if (section === 'game') {
+        score = 0;
+        currentQuestion = 0;
+        scoreBox.classList.remove('hidden');
+        scoreBox.textContent = "Puntaje: 0";
+        showQuestion();
+      } else if (section === 'tips') {
+        contentArea.innerHTML = `
+          <h2>🌟 Consejos de Totoro</h2>
+          <ul>
+            <li>🎒 Usa una alcancía mágica para tus monedas</li>
+            <li>📅 Ahorra un poco cada semana</li>
+            <li>🎯 Dibuja tus metas y planea cómo alcanzarlas</li>
+          </ul>
+          <p>¡Comparte estos consejos con tus papás y amigos!</p>
+        `;
+        scoreBox.classList.add('hidden');
+      }
+    }
+
+    function showQuestion() {
+      if (currentQuestion >= questions.length) {
+        contentArea.innerHTML = `<h2>🎉 ¡Juego terminado!</h2><p>Tu puntaje final es: <strong>${score}</strong> de ${questions.length}</p>`;
+        return;
+      }
+
+      const q = questions[currentQuestion];
+      let html = `<h2>${q.question}</h2>`;
+      q.options.forEach((option, index) => {
+        html += `<button onclick="answerQuestion(${option.correct})">${option.text}</button><br>`;
+      });
+
+      contentArea.innerHTML = html;
+    }
+
+    function answerQuestion(isCorrect) {
+      if (isCorrect) {
+        score++;
+        alert("¡Correcto! 🌟");
+      } else {
+        alert("Ups, esa no era la mejor opción 😅");
+      }
+      scoreBox.textContent = `Puntaje: ${score}`;
+      currentQuestion++;
+      showQuestion();
+    }
+  </script>
+</body>
+</html>
